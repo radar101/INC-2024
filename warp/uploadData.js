@@ -8,7 +8,7 @@ async function createPost() {
   await contract.writeInteraction({
     function: "uploadData",
     doc: {
-      name: "Hi from first ",
+      name: "Hi Second ",
       uid: uuid()
     }
   })
