@@ -7,6 +7,7 @@ dotenv.config();
 import  rateLimiterUsingThirdParty  from './middlewares/rateLimit.js';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import {s3,upload} from "./middlewares/multers3.js"
+import userRouter from "./router/userRoutes.js";
 connectDb();
 
 const app = express();
@@ -24,7 +25,7 @@ app.get("/", (req, res) => {
 })
 
 
-
+app.use("/user",userRouter)
 app.post("/upload", upload, async (req, res) => {
   try {
     const responseData = {

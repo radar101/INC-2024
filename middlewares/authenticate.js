@@ -1,6 +1,6 @@
 
 import jwt from 'jsonwebtoken';
-import User  from '../models/userModels';
+import User  from '../models/userModels.js';
 
 
 
@@ -38,4 +38,4 @@ try{
 
 
 
-module.exports= Authentication;
+export default Authentication;
