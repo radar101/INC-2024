@@ -7,9 +7,11 @@ import {
     userLogout,
     getUser,
     userProfileUpdate,
-    uploadProfilePicture
+    uploadProfilePicture,
+    createDocument
 } from '../controllers/user-controller.js';
 import uploadMiddleware from  "../middlewares/uploadImageMiddleware.js";
+import { upload } from "../middlewares/multers3.js";
 
 
 
@@ -27,4 +29,5 @@ userRouter.get('/getuser', Authentication, getUser);
 
 userRouter.post('/uploadprofilepic',Authentication,uploadMiddleware.single("profilepic"),uploadProfilePicture);
 
+userRouter.post("/upload", upload, createDocument)
 export default userRouter

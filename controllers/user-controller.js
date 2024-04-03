@@ -2,7 +2,11 @@
 import User from '../models/userModels.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Blockchain from './blockchain-controller.js';
+import { uploadFileOnIpfs } from './ipfsUploads.js';
 
+
+const blockchain = new Blockchain();
 
 //@desc User register
 //@route GET /api/user/register
@@ -166,3 +170,60 @@ export const uploadProfilePicture = async (req,res)=>{
 
 
 }
+
+
+// Blockchain api
+// newTitle, newIpType, newDescription, stnewProofs, stnewLinks,
+// newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, 
+// newOwnerProofIdentifier, newOwnerDigitalSign
+export const createDocument = async (req,res)=>{
+
+    
+    try{
+
+    
+
+    // userInput validatefirst (left)
+     const newIpRecord = req.body;
+   
+
+//     // upload file on IPFS 
+//     const filename = req.file?.originalname;
+
+
+
+//     // get cid 
+//     const cid = await  uploadFileOnIpfs(filename);
+//     console.log(cid);
+
+//     //call function // pass the required data;
+
+    const id = await  blockchain.addIpRecordTocontract(newIpRecord)
+//    console.log(id);
+     res.json({id});
+//    if(id)
+//    {
+//         // store it in mongo database user profile 
+//         // need to change the schem 
+//    }
+
+}
+catch(err)
+{
+    res.status(500).json({message:err.message,err});
+}
+
+   
+}
+
+
+
+
+export const retriveData = async ()=>{
+
+    // from the cid and ...
+    //retrive the data from the blockchain 
+
+    // return the data to the user 
+    
+} 

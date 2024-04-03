@@ -2,12 +2,12 @@
 
 
 import dotenv from 'dotenv'
-
+dotenv.config();
 
 export const INFURA_KEY = process.env.INFURA_KEY;
-export const PUBLI_KEY  = process.env.PUBLI_KEY;
-export const PRIVATE_KEY= process.env.PRIVATE_KEY;
-
+export const PUBLIC_KEY  = process.env.WALLET_PUBLIC_KEY;
+export const PRIVATE_KEY= process.env.WALLET_PRIVATE_KEY;
+export const FILE_SERVER_URL = process.env.FILE_SERVER_URL;
 export const ABI_ID = [
 	{
 		"anonymous": false,
@@ -173,6 +173,42 @@ export const ABI_ID = [
 		"type": "function"
 	}
 ]
+
+// export const ABI_ID = [
+// 	{
+// 		"inputs": [],
+// 		"name": "getString",
+// 		"outputs": [
+// 			{
+// 				"internalType": "string",
+// 				"name": "",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"stateMutability": "view",
+// 		"type": "function"
+// 	},
+// 	{
+// 		"inputs": [
+// 			{
+// 				"internalType": "string",
+// 				"name": "useString",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"name": "setString",
+// 		"outputs": [
+// 			{
+// 				"internalType": "bool",
+// 				"name": "",
+// 				"type": "bool"
+// 			}
+// 		],
+// 		"stateMutability": "nonpayable",
+// 		"type": "function"
+// 	}
+// ]
+
 
 
 export const CONTRACT_ADDRESS= process.env.CONTRACT_ADDRESS
