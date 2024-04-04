@@ -57,7 +57,7 @@ class Blockchain
         console.log("-------------------", useString, "-------------------");
     }
 */
-    async addIpRecordToContract(newTitle, newIpType,newProofs, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
+    async addIpRecordToContract(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
     {
         // const newIpRecord = {newTitle, newIpType, newDescription, newProofs, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign};
         /*const newIpRecord = {
@@ -74,14 +74,17 @@ class Blockchain
             useOwnerDigitalSign: 'newOwnerDigitalSign',
         }*/
         const newOwnerProofType = "Adhar";
+        console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
+        console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
+
         try{
-            const trxnData = await this.contract.methods.addIpRecord(
+            const documentId = await this.contract.methods.addIpRecord(
             newTitle,
             newIpType,
             newDescription,
             newProofs,
             newLinks,
-            newExtrainfo,
+            newExtraInfo,
             newLicenseType,
             newOwnerName,
             newOwnerProofType,
@@ -89,10 +92,27 @@ class Blockchain
             newOwnerDigitalSign,
             ).send({from: this.account.address});
             const docId = await this.contract.methods.getIpId().call();
+            console.log('!!!!!!!!!!!!!!docId: ',docId.toString(),'!!!!!!!!!!!');
+            const serializedTransaction = {
+                transactionHash: documentId.transactionHash,
+                transactionIndex: documentId.transactionIndex.toString(),
+                blockNumber: documentId.blockNumber.toString(),
+                blockHash: documentId.blockHash,
+                from: documentId.from,
+                to: documentId.to,
+                cumulativeGasUsed: documentId.cumulativeGasUsed.toString(),
+                gasUsed: documentId.gasUsed.toString(),
+                logs: documentId.logs,
+                logsBloom: documentId.logsBloom,
+                status: documentId.status.toString(),
+                effectiveGasPrice: documentId.effectiveGasPrice.toString(),
+                type: documentId.type.toString()
+            };
+            
             const docInfo = {
-                blockNumber: trxnData.blockNumber,
-                trxnHash: trxnData.transactionHash,
-                documentId: docId,
+                blockNumber: serializedTransaction.blockNumber,
+                trxnHash: serializedTransaction.transactionHash,
+                documentId: docId.toString(),
             };
             return docInfo;
         }catch(error){

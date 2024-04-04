@@ -2,7 +2,7 @@ const User = require('../models/userModels.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Blockchain = require('./blockchain-controller.js');
-const { uploadFileOnIpfs } = require('./ipfsUploads.js');
+const  uploadFileOnIpfs = require('../controllers/ipfsUploads.js');
 
 const blockchain = new Blockchain();
 
@@ -23,27 +23,17 @@ const userResister = async (req, res) => {
     const obj = await User.findOne({ email });
 
     if (obj) {
-
         return res.status(409).send("User has resgistrerd already ");
-
     }
     try {
         const newUser = await new User({ name, email, phone, password });
-
-
-
-
-
         await User.create(newUser);
         res.status(200).send("User rigistered successfully");
-
     }
     catch {
         console.log(err);
         res.status(500).send("internal server error");
     }
-
-
 }
 
 
@@ -162,18 +152,29 @@ const uploadProfilePicture = async (req, res) => {
 // newOwnerProofIdentifier, newOwnerDigitalSign
 const createIpDocument = async (req, res) => {
     try {
+        //console.log(req.body);
+        //console.log(req.files.sign);
+        
         // userInput validatefirst (left)
-        const {newTitle, newIpType, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
+        const {newTitle, newIpType, newDescription, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
         //     // upload file on IPFS 
-        const proofName = req.proof?.originalname;
-        const signName = req.sign?.originalname;
+        const signDoc = req.files[0].originalname;
+        //console.log("------all files: -----", req.files, "--------------");
+        //console.log('+++++++++only first element:++++++', req.files[0], "++++++++++++++");
+        const newOwnerDigitalSign = await uploadFileOnIpfs(signDoc);
+        console.log("------string: -----", newOwnerDigitalSign, "--------------");
+        
+        const newProofs = [];
+        for(var i = 1; i<req.files.length; i++){
+            const newElement = await uploadFileOnIpfs(req.files[i].originalname);
+            newProofs.push(newElement);
+        }
+
         //     // get cid 
-        const newProofs = await uploadFileOnIpfs(proofName);
-        const newOwnerDigitalSign = await uploadFileOnIpfs(signName);
             // console.log(cid);
         //     //call function // pass the required data;
-
-        const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
+        const newLinks = ['www.youtube.com','www.facebook.com'];
+        const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
         //    console.log(id);
         res.json({ id });
         //    if(id)
