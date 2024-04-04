@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const Blockchain = require('./blockchain-controller.js');
 const { uploadFileOnIpfs } = require('./ipfsUploads.js');
 
-
-
 const blockchain = new Blockchain();
 
 //@desc User register
@@ -230,8 +228,6 @@ const getDocument = async (req, res) => {
     catch (err) {
         res.status(500).json({ message: err.message, err });
     }
-
-
 }
 
 
