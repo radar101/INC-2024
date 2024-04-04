@@ -79,7 +79,6 @@ const userLogin = async (req, res) => {
 
 
         res.cookie("jwtoken", token, {
-
             expires: new Date(Date.now() + 25892000000),
             httpOnly: true
         });
@@ -108,7 +107,6 @@ const userLogin = async (req, res) => {
 //@access authorized
 const userLogout = async (req, res) => {
     try {
-
         res.cookie('jwtoken', '', { maxAge: 1 });
         res.status(200).json({ message: "Token deleted" });
     }
@@ -117,7 +115,6 @@ const userLogout = async (req, res) => {
     }
 }
 
-
 //@desc User information
 //@route GET /api/user/getuser
 //@access private
@@ -125,10 +122,6 @@ const getUser = async (req, res) => {
     const user = await User.findOne({ _id: req.rootuser._id })
     res.status(200).send(user);
 }
-
-
-
-
 
 //@desc User profile updation
 //@route GET /api/user/updateprofile
@@ -165,10 +158,7 @@ const uploadProfilePicture = async (req, res) => {
         .catch((e) => {
             res.status(500).send("internal server error");
         })
-
-
 }
-
 
 // Blockchain api
 // newTitle, newIpType, newDescription, stnewProofs, stnewLinks,
@@ -179,10 +169,10 @@ const createDocument = async (req, res) => {
         // userInput validatefirst (left)
         const newIpRecord = req.body;
         //     // upload file on IPFS 
-        //     const filename = req.file?.originalname;
+            // const filename = req.file?.originalname;
         //     // get cid 
-        //     const cid = await  uploadFileOnIpfs(filename);
-        //     console.log(cid);
+            // const cid = await  uploadFileOnIpfs(filename);
+            // console.log(cid);
 
         //     //call function // pass the required data;
 
@@ -199,8 +189,6 @@ const createDocument = async (req, res) => {
     catch (err) {
         res.status(500).json({ message: err.message, err });
     }
-
-
 }
 
 const getDocument = async (req, res) => {
@@ -240,4 +228,4 @@ const retriveData = async () => {
     // return the data to the user 
 }
 
-module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createDocument }
+module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createDocument, getDocument }

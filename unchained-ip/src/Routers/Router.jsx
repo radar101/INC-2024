@@ -8,6 +8,7 @@ import Create from '../Pages/Create.jsx'
 import User from '../Pages/User.jsx';
 import CreateIP from '../Pages/CreateIP.jsx';
 import CreateWill from '../Pages/CreateWill.jsx';
+import Verify from '../Pages/Verify.jsx';
 
 const router = createBrowserRouter(
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
                     <Route path='ip' element={<CreateIP/>}/>
                     <Route path='will' element={<CreateWill/>}/>
                 </Route>
+                <Route path='verify' element={<Verify/>}/>
                 <Route path='about' element={<About />} />
                 <Route path='user' element={<User />} />
             </Route>

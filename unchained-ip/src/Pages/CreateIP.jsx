@@ -7,7 +7,7 @@ const CreateIP = () => {
   const [valid, setValid] = useState(true);
   const [addhar, setAadhar] = useState('');
   const [digsign, setDigSign] = useState('');
-
+  const [formData,setFormData]=useState(null);
 
   return (
     <section id='create_ip_sec'>
