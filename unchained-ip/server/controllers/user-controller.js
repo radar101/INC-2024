@@ -47,8 +47,6 @@ const userResister = async (req, res) => {
 }
 
 
-
-
 //@desc User Login
 //@route GET /api/user/login
 //@access public
@@ -98,8 +96,6 @@ const userLogin = async (req, res) => {
     }
 
 }
-
-
 
 
 //@desc User Logout
