@@ -5,23 +5,49 @@ import dotenv from 'dotenv'
 
 
 export const INFURA_KEY = process.env.INFURA_KEY;
-export const PUBLI_KEY  = process.env.PUBLI_KEY;
-export const PRIVATE_KEY= process.env.PRIVATE_KEY;
+export const PUBLIC_KEY  = process.env.WALLET_PUBLIC_KEY;
+export const PRIVATE_KEY= process.env.WALLET_PRIVATE_KEY;
+export const QUICK_NODE_KEY	 = process.env.QUICK_NODE_KEY;
 
+
+//Test contract abi:
+// export const ABI_ID = [
+// 	{
+// 		"inputs": [
+// 			{
+// 				"internalType": "string",
+// 				"name": "_newString",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"name": "writeString",
+// 		"outputs": [
+// 			{
+// 				"internalType": "bool",
+// 				"name": "",
+// 				"type": "bool"
+// 			}
+// 		],
+// 		"stateMutability": "nonpayable",
+// 		"type": "function"
+// 	},
+// 	{
+// 		"inputs": [],
+// 		"name": "readString",
+// 		"outputs": [
+// 			{
+// 				"internalType": "string",
+// 				"name": "",
+// 				"type": "string"
+// 			}
+// 		],
+// 		"stateMutability": "view",
+// 		"type": "function"
+// 	}
+// ]
+
+//Final contract abi:
 export const ABI_ID = [
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "Added",
-		"type": "event"
-	},
 	{
 		"inputs": [
 			{
@@ -81,21 +107,99 @@ export const ABI_ID = [
 			}
 		],
 		"name": "addIpRecord",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
+				"internalType": "string",
+				"name": "useExecutorName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useExecutorIdProof",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useExecutorDigitalSign",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useTestatorName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useTestatorIdProof",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useTestatorDigitalSign",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useWitnessName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useWitnessIdProof",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useWitnessDigitalSign",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "useDocument",
+				"type": "string"
+			}
+		],
+		"name": "addWillRecord",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getIpId",
+		"outputs": [
+			{
 				"internalType": "uint256",
-				"name": "useItemId",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getWillId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "useIpItemId",
 				"type": "uint256"
 			}
 		],
@@ -162,9 +266,95 @@ export const ABI_ID = [
 						"internalType": "string",
 						"name": "ownerDigitalSign",
 						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct IpContract.IpRecord",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "useWillItemId",
+				"type": "uint256"
+			}
+		],
+		"name": "readWillRecord",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "executorName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "executorIdProof",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "executorDigitalSign",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "testatorName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "testatorIdProof",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "testatorDigitalSign",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "witnessName",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "witnessIdProof",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "witnessDigitalSign",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "document",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct IpContract.WillRecord",
 				"name": "",
 				"type": "tuple"
 			}

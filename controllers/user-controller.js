@@ -2,6 +2,33 @@
 import User from '../models/userModels.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Blockchain from "../controllers/blockchain-controller.js";
+
+const blockchain = new Blockchain();
+
+//Test contract controller
+// export const getString = async (req, res) => {
+//     const data = await blockchain.getContractString();
+//     // console.log(data);
+// }
+
+// export const setString = async (req, res) => {
+//     const data = await blockchain.setContractString();
+//     // console.log(data);
+// }
+
+export const addIpRecord = async (req, res) => {
+    const userData = req.body;
+    const data = await blockchain.addIpRecordToContract(userData);
+    console.log("=================================", data, "==========================");
+    return res.status(200).json({"data" : data});
+}
+
+export const readIpRecord = async (req, res) => {
+    const data = await blockchain.readIpRecordToContract();
+    console.log("=================================", data, "===========================");
+    return res.status(200).json({"data" : data});
+}
 
 
 //@desc User register
@@ -22,7 +49,7 @@ export const userResister = async (req, res) => {
 
     if (obj) {
 
-        return res.status(409).send("User has resgistrerd already ");
+        return res.status(409).send("User has already resgistered ");
 
     }
     try {

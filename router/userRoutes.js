@@ -7,10 +7,13 @@ import {
     userLogout,
     getUser,
     userProfileUpdate,
-    uploadProfilePicture
+    uploadProfilePicture,
+    //getString,
+    //setString,
+    readIpRecord,
+    addIpRecord,
 } from '../controllers/user-controller.js';
 import uploadMiddleware from  "../middlewares/uploadImageMiddleware.js";
-
 
 
 
@@ -26,5 +29,8 @@ userRouter.get('/logout', Authentication, userLogout);
 userRouter.get('/getuser', Authentication, getUser);
 
 userRouter.post('/uploadprofilepic',Authentication,uploadMiddleware.single("profilepic"),uploadProfilePicture);
-
+// userRouter.get("/getString", getString);
+// userRouter.get("/setString", setString);
+userRouter.get("/getRecord", readIpRecord);
+userRouter.get("/setRecord", addIpRecord);
 export default userRouter
