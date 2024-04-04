@@ -1,6 +1,8 @@
 
-import Web3 from "web3";
-import { ABI_ID, CONTRACT_ADDRESS, INFURA_KEY, PRIVATE_KEY, QUICK_NODE_KEY } from "../conf/conf.js";
+const {default : Web3} = require("web3");
+//import Web3 from "web3";
+const { ABI_ID, CONTRACT_ADDRESS, INFURA_KEY, PRIVATE_KEY, QUICK_NODE_KEY } = require("../conf/config.js");
+//import { ABI_ID, CONTRACT_ADDRESS, INFURA_KEY, PRIVATE_KEY, QUICK_NODE_KEY } from "../conf/config.js";
 
 class Blockchain 
 {
@@ -55,9 +57,9 @@ class Blockchain
         console.log("-------------------", useString, "-------------------");
     }
 */
-    async addIpRecordToContract(newTitle, newIpType, newDescription, newProofs, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign)
+    async addIpRecordToContract(newTitle, newIpType,newProofs, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
     {
-        //const newIpRecord = {newTitle, newIpType, newDescription, newProofs, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign};
+        // const newIpRecord = {newTitle, newIpType, newDescription, newProofs, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign};
         /*const newIpRecord = {
             useTitle: 'newTitle',
             useIpType: 'newIpType',
@@ -71,7 +73,7 @@ class Blockchain
             useOwnerProofIdentifier: 'newOwnerProofIdentifier',
             useOwnerDigitalSign: 'newOwnerDigitalSign',
         }*/
-
+        const newOwnerProofType = "Adhar";
         try{
             const trxnData = await this.contract.methods.addIpRecord(
             newTitle,
@@ -163,5 +165,4 @@ class Blockchain
     }
 
 }
-
-export default Blockchain;
+module.exports = Blockchain;

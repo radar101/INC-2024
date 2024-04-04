@@ -28,10 +28,16 @@ const storage = multerS3({
     },
 });
 
-const upload = multer({
+const uploadProof = multer({
   storage: storage,
   limits: { fileSize: 1000000 }, // Limit file size if needed
-}).single("file");
+}).single("proof");
+
+const uploadSign = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // Limit file size if needed
+}).single("sign");
 
 
-module.exports = {s3, upload};
+
+module.exports = {s3, uploadProof, uploadSign};

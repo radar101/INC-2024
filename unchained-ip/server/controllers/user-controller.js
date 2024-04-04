@@ -160,19 +160,20 @@ const uploadProfilePicture = async (req, res) => {
 // newTitle, newIpType, newDescription, stnewProofs, stnewLinks,
 // newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, 
 // newOwnerProofIdentifier, newOwnerDigitalSign
-const createDocument = async (req, res) => {
+const createIpDocument = async (req, res) => {
     try {
         // userInput validatefirst (left)
-        const newIpRecord = req.body;
+        const {newTitle, newIpType, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
         //     // upload file on IPFS 
-            // const filename = req.file?.originalname;
+        const proofName = req.proof?.originalname;
+        const signName = req.sign?.originalname;
         //     // get cid 
-            // const cid = await  uploadFileOnIpfs(filename);
+        const newProofs = await uploadFileOnIpfs(proofName);
+        const newOwnerDigitalSign = await uploadFileOnIpfs(signName);
             // console.log(cid);
-
         //     //call function // pass the required data;
 
-        const id = await blockchain.addIpRecordTocontract(newIpRecord)
+        const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
         //    console.log(id);
         res.json({ id });
         //    if(id)
@@ -180,6 +181,8 @@ const createDocument = async (req, res) => {
         //         // store it in mongo database user profile 
         //         // need to change the schem 
         //    }
+
+        // TODO: Delete file from server
 
     }
     catch (err) {
@@ -224,4 +227,4 @@ const retriveData = async () => {
     // return the data to the user 
 }
 
-module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createDocument, getDocument }
+module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createIpDocument, getDocument }

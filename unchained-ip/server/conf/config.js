@@ -1,11 +1,11 @@
 
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
 
 
-export const INFURA_KEY = process.env.INFURA_KEY;
-export const PUBLIC_KEY  = process.env.WALLET_PUBLIC_KEY;
-export const PRIVATE_KEY= process.env.WALLET_PRIVATE_KEY;
-export const QUICK_NODE_KEY	 = process.env.QUICK_NODE_KEY;
+const INFURA_KEY = process.env.INFURA_KEY;
+const PUBLIC_KEY  = process.env.WALLET_PUBLIC_KEY;
+const PRIVATE_KEY= process.env.WALLET_PRIVATE_KEY;
+const QUICK_NODE_KEY	 = process.env.QUICK_NODE_KEY;
 
 //Test contract abi:
 // export const ABI_ID = [
@@ -45,7 +45,7 @@ export const QUICK_NODE_KEY	 = process.env.QUICK_NODE_KEY;
 
 //Final contract abi:
 
-export const ABI_ID = [
+const ABI_ID = [
 	{
 		"inputs": [
 			{
@@ -362,4 +362,6 @@ export const ABI_ID = [
 	}
 ]
 
-export const CONTRACT_ADDRESS= process.env.CONTRACT_ADDRESS
+const CONTRACT_ADDRESS= process.env.CONTRACT_ADDRESS
+
+module.exports = {CONTRACT_ADDRESS,ABI_ID,QUICK_NODE_KEY,PRIVATE_KEY,PUBLIC_KEY,INFURA_KEY};
