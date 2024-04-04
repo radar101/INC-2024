@@ -73,9 +73,9 @@ class Blockchain
             useOwnerProofIdentifier: 'newOwnerProofIdentifier',
             useOwnerDigitalSign: 'newOwnerDigitalSign',
         }*/
-        const newOwnerProofType = "Adhar";
-        console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
-        console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
+        const newOwnerProofType = "Aadhar";
+        //console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
+        //console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
 
         try{
             const documentId = await this.contract.methods.addIpRecord(
@@ -92,7 +92,7 @@ class Blockchain
             newOwnerDigitalSign,
             ).send({from: this.account.address});
             const docId = await this.contract.methods.getIpId().call();
-            console.log('!!!!!!!!!!!!!!docId: ',docId.toString(),'!!!!!!!!!!!');
+            //console.log('!!!!!!!!!!!!!!docId: ',docId.toString(),'!!!!!!!!!!!');
             const serializedTransaction = {
                 transactionHash: documentId.transactionHash,
                 transactionIndex: documentId.transactionIndex.toString(),
@@ -122,10 +122,28 @@ class Blockchain
     }
     
     async readIpRecordToContract(newIpId)
-    {
+    {   
         try {
             const ipRecord = await this.contract.methods.readIpRecord(newIpId).call();
-            return ipRecord;
+            //ipRecord.timestamp = ipRecord.timestamp.toString();
+            //ipRecord.id = ipRecord.id.toString();
+            //console.log('################',ipRecord,'################');
+            const resIpRecord = {
+                id: ipRecord.id.toString(),
+                title: ipRecord.title,
+                ipType: ipRecord.ipType,
+                description: ipRecord.description,
+                proofs: ipRecord.proofs,
+                links: ipRecord.links,
+                extraInfo: ipRecord.extraInfo,
+                licenseType: ipRecord.licenseType,
+                ownerName: ipRecord.ownerName,
+                ownerProofType: ipRecord.ownerProofType,
+                ownerProofIdentifier: ipRecord.ownerProofIdentifier,
+                ownerDigitalSign: ipRecord.ownerDigitalSign,
+                timestamp: ipRecord.timestamp.toString()
+            };
+            return resIpRecord;
         } catch (error) {
             console.error('---------------------Error reading IP record:', error, '------------------------');
             return false;

@@ -191,10 +191,11 @@ const createIpDocument = async (req, res) => {
     }
 }
 
-const getDocument = async (req, res) => {
+const readIpDocument = async (req, res) => {
     try {
         // userInput validatefirst (left)
-        const ipId = req.body.id;
+        const newIpId = req.query.id;
+        console.log('++++++++++newIpdID is: ',newIpId,'+++++++')
         //     // upload file on IPFS 
         //     const filename = req.file?.originalname;
         //     // get cid 
@@ -203,8 +204,8 @@ const getDocument = async (req, res) => {
 
         //     //call function // pass the required data;
 
-        const record = await blockchain.readIpRecordToContract(ipId)
-        //    console.log(id);
+        const record = await blockchain.readIpRecordToContract(newIpId);
+        console.log('################',record,'################');
         res.json({ record });
         //    if(id)
         //    {
@@ -228,4 +229,4 @@ const retriveData = async () => {
     // return the data to the user 
 }
 
-module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createIpDocument, getDocument }
+module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createIpDocument, readIpDocument }
