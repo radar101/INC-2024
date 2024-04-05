@@ -2,7 +2,7 @@ const User = require('../models/userModels.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Blockchain = require('./blockchain-controller.js');
-const  uploadFileOnIpfs = require('../controllers/ipfsUploads.js');
+const  uploadFileOnIpfs = require('./ipfsUploads.js');
 const { single } = require('../middlewares/uploadImageMiddleware.js');
 
 const blockchain = new Blockchain();
