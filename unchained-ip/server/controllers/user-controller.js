@@ -157,6 +157,18 @@ const createIpDocument = async (req, res) => {
         
         // userInput validatefirst (left)
         const {newTitle, newIpType, newDescription, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
+        if(newExtraInfo == null && newLicenseType == null) {
+            newExtraInfo = ""
+            newLicenseType = ""
+        }
+        else if(newExtraInfo == null) {
+            newExtraInfo = "";
+        }else if(newLicenseType == null) {
+            newLicenseType = ""
+        } else if(newTitle == null || newIpType == null || newDescription == null || newOwnerName == null || newOwnerProofIdentifier == null) {
+            return res.status(401).json({"msg" : "Please enter the required fields"});
+        }
+        
         //     // upload file on IPFS 
         const signDoc = req.files[0].originalname;
         //console.log("------all files: -----", req.files, "--------------");
