@@ -110,7 +110,8 @@ class Blockchain
                 type: documentId.type.toString()
             };
             
-            const docInfo = {
+            const docInfo = {    
+                title : newTitle,            
                 blockNumber: serializedTransaction.blockNumber,
                 trxnHash: serializedTransaction.transactionHash,
                 documentId: docId.toString(),
@@ -196,6 +197,7 @@ class Blockchain
                 type: documentId.type.toString()
             };
             const docInfo = {
+                type : "will",
                 blockNumber: serializedTransaction.blockNumber,
                 trxnHash: serializedTransaction.transactionHash,
                 documentId: docId.toString(),

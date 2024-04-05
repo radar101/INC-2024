@@ -11,18 +11,11 @@ const blockchain = new Blockchain();
 //@route GET /api/user/register
 //@access public
 const userResister = async (req, res) => {
-
-
     const { name, phone, email, password } = req.body;
-
-
-
     if (!name || !phone || !email || !password) {
         return res.status(400).send("Enter the data first");
     }
-
     const obj = await User.findOne({ email });
-
     if (obj) {
         return res.status(409).send("User has resgistrerd already ");
     }
@@ -42,11 +35,8 @@ const userResister = async (req, res) => {
 //@route GET /api/user/login
 //@access public
 const userLogin = async (req, res) => {
-
     const { email, password } = req.body;
-
     console.log(req.body)
-
     if (!email || !password) {
         return res.status(400).json({ message: "Enter the data first " });
     }
@@ -106,8 +96,9 @@ const userLogout = async (req, res) => {
 //@route GET /api/user/getuser
 //@access private
 const getUser = async (req, res) => {
+    console.log(req.rootuser._id );
     const user = await User.findOne({ _id: req.rootuser._id })
-    res.status(200).send(user);
+    res.status(200).json(user);
 }
 
 //@desc User profile updation
@@ -157,7 +148,7 @@ const createIpDocument = async (req, res) => {
         // userInput validatefirst (left)
         let {newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
 
-  
+  console.log(newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier)
         if(newExtraInfo == null && newLicenseType == null) {
             newExtraInfo = ""
             newLicenseType = ""
@@ -301,17 +292,13 @@ const createWillDocument = async (req,res) => {
         }
     }
 
-
+    // /user/readip
+    // /user/readwill
     const readWillDocument = async (req, res) => {
         try {
-            
             const newWillId = req.query.id;
-    
             const record = await blockchain.readWillRecordToContract(newWillId);
-            
             res.json({ record });
-            
-    
         }
         catch (err) {
             res.status(500).json({ message: err.message, err });

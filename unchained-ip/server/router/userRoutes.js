@@ -29,12 +29,14 @@ userRouter.get('/getuser', Authentication, getUser);
 
 userRouter.post('/uploadprofilepic', Authentication, uploadMiddleware.single("profilepic"), uploadProfilePicture);
 
-userRouter.post("/upload", uploadDocs, createIpDocument);
+userRouter.post("/upload", Authentication,uploadDocs, createIpDocument);
 
 userRouter.get("/readip",readIpDocument)    
 
 userRouter.get("/download", readIpDocument);
 
-userRouter.post("/uploadWill", uploadWillDocs, createWillDocument);
+userRouter.post("/uploadWill", Authentication,uploadWillDocs, createWillDocument);
+
 userRouter.get("/readwill", readWillDocument);
+
 module.exports = userRouter
