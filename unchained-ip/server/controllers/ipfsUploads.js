@@ -3,6 +3,7 @@ const { s3 } = require("../middlewares/multers3.js");
 
 const uploadFileOnIpfs = async (filename) => {
   try {
+    console.log(filename)
     const responseData = {
       file: filename,
       url: `${"http://localhost:8000"}/${filename}`,

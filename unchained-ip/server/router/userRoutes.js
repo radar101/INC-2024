@@ -9,10 +9,12 @@ const {
     userProfileUpdate,
     uploadProfilePicture,
     createIpDocument,
-    readIpDocument
+    readIpDocument,
+    createWillDocument,
+    readWillDocument
 } = require('../controllers/user-controller.js');
 const uploadMiddleware = require("../middlewares/uploadImageMiddleware.js");
-const { uploadDocs } = require("../middlewares/multers3.js");
+const { uploadDocs, uploadWillDocs } = require("../middlewares/multers3.js");
 
 
 userRouter.post('/register', userResister);
@@ -29,4 +31,7 @@ userRouter.post('/uploadprofilepic', Authentication, uploadMiddleware.single("pr
 
 userRouter.post("/upload", uploadDocs, createIpDocument);
 userRouter.get("/download", readIpDocument);
+
+userRouter.post("/uploadWill", uploadWillDocs, createIpDocument);
+userRouter.get("/downloadWill", readIpDocument);
 module.exports = userRouter

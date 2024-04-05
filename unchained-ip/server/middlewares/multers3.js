@@ -41,8 +41,13 @@ const storage = multerS3({
 const uploadDocs = multer({
   storage: storage,
   limits: { fileSize: 1000000 }, // Limit file size if needed
-}).array("docs", 5);
+}).array("docs[]", 5);
+
+const uploadWillDocs = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // Limit file size if needed
+}).array("willDocs[]", 4);
 
 
 
-module.exports = {s3, uploadDocs};
+module.exports = {s3, uploadDocs, uploadWillDocs};

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Blockchain = require('./blockchain-controller.js');
 const  uploadFileOnIpfs = require('../controllers/ipfsUploads.js');
+const { single } = require('../middlewares/uploadImageMiddleware.js');
 
 const blockchain = new Blockchain();
 
@@ -152,11 +153,9 @@ const uploadProfilePicture = async (req, res) => {
 // newOwnerProofIdentifier, newOwnerDigitalSign
 const createIpDocument = async (req, res) => {
     try {
-        //console.log(req.body);
-        //console.log(req.files.sign);
         
         // userInput validatefirst (left)
-        const {newTitle, newIpType, newDescription, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
+        const {newTitle, newIpType, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
         if(newExtraInfo == null && newLicenseType == null) {
             newExtraInfo = ""
             newLicenseType = ""
@@ -169,23 +168,23 @@ const createIpDocument = async (req, res) => {
             return res.status(401).json({"msg" : "Please enter the required fields"});
         }
         
-        //     // upload file on IPFS 
-        const signDoc = req.files[0].originalname;
-        //console.log("------all files: -----", req.files, "--------------");
-        //console.log('+++++++++only first element:++++++', req.files[0], "++++++++++++++");
+        // upload file on IPFS
+        const signDoc = JSON.parse(req.body.docs[1]).filename; 
+        //const signDoc = req.files[0].originalname;;
         const newOwnerDigitalSign = await uploadFileOnIpfs(signDoc);
-        console.log("------string: -----", newOwnerDigitalSign, "--------------");
+        //console.log("------string: -----", newOwnerDigitalSign, "--------------");
         
         const newProofs = [];
-        for(var i = 1; i<req.files.length; i++){
-            const newElement = await uploadFileOnIpfs(req.files[i].originalname);
+        for(var i = 2; i<req.body.docs.length; i++){
+            console.log(req.body.docs[i].filename);
+            const newElement = await uploadFileOnIpfs(req.body.docs[i].filename); //req.files[i].originalname
             newProofs.push(newElement);
         }
 
         //     // get cid 
             // console.log(cid);
         //     //call function // pass the required data;
-        const newLinks = ['www.youtube.com','www.facebook.com'];
+        //const newLinks = ['www.youtube.com','www.facebook.com'];
         const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
         //    console.log(id);
         res.json({ id });
@@ -199,15 +198,17 @@ const createIpDocument = async (req, res) => {
 
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message, err });
     }
 }
+
 
 const readIpDocument = async (req, res) => {
     try {
         // userInput validatefirst (left)
         const newIpId = req.query.id;
-        console.log('++++++++++newIpdID is: ',newIpId,'+++++++')
+        //console.log('++++++++++newIpdID is: ',newIpId,'+++++++')
         //     // upload file on IPFS 
         //     const filename = req.file?.originalname;
         //     // get cid 
@@ -217,7 +218,7 @@ const readIpDocument = async (req, res) => {
         //     //call function // pass the required data;
 
         const record = await blockchain.readIpRecordToContract(newIpId);
-        console.log('################',record,'################');
+        //console.log('################',record,'################');
         res.json({ record });
         //    if(id)
         //    {
@@ -231,6 +232,75 @@ const readIpDocument = async (req, res) => {
     }
 }
 
+const createWillDocument = async (req,res) => {
+    try{
+        //taking required fields
+        const {newExecutorName,
+            newExecutorIdProof,
+            newTestatorName,
+            newTestatorIdProof,
+            newWitnessName,
+            newWitnessIdProof,} = req.body;
+
+            //null checking
+        if(newExecutorName == null ||
+            newExecutorIdProof == null ||
+            newTestatorName == null ||
+            newTestatorIdProof == null ||
+            newWitnessName == null ||
+            newWitnessIdProof == null 
+            ){
+               return res.status(401).json({"msg" : "Please enter the required fields"});
+        }
+
+        //upload data on ipfs
+        const useWillDoc = JSON.parse(req.body.willdocs[1]).filename;
+        const newDocument = await uploadFileOnIpfs(useWillDoc);
+
+        const useExecutorDigitalSign = JSON.parse(req.body.willDocs[2]).filename;
+        const newExecutorDigitalSign = await uploadFileOnIpfs(useExecutorDigitalSign);
+
+        const useTestatorDigitalSign = JSON.parse(req.body.willDocs[2]).filename;
+        const newTestatorDigitalSign = await uploadFileOnIpfs(useTestatorDigitalSign);
+
+        const useWitnessDigitalSign = JSON.parse(req.body.willDocs[2]).filename;
+        const newWitnessDigitalSign = await uploadFileOnIpfs(useWitnessDigitalSign);
+
+        const id = await blockchain.addWillRecordToContract(newExecutorName,
+            newExecutorIdProof,
+            newExecutorDigitalSign,
+            newTestatorName,
+            newTestatorIdProof,
+            newTestatorDigitalSign,
+            newWitnessName,
+            newWitnessIdProof,
+            newWitnessDigitalSign,
+            newDocument,)
+        //    console.log(id);
+        res.json({ id });
+
+        }catch(error){
+            console.log(err);
+            res.status(500).json({ message: err.message, err });
+        }
+    }
+
+    const readWillDocument = async (req, res) => {
+        try {
+            
+            const newWillId = req.query.id;
+    
+            const record = await blockchain.readWillRecordToContract(newWillId);
+            
+            res.json({ record });
+            
+    
+        }
+        catch (err) {
+            res.status(500).json({ message: err.message, err });
+        }
+    }
+
 
 
 const retriveData = async () => {
@@ -241,4 +311,4 @@ const retriveData = async () => {
     // return the data to the user 
 }
 
-module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createIpDocument, readIpDocument }
+module.exports = { getUser, userResister, userLogin, userLogout, userProfileUpdate, uploadProfilePicture, retriveData, createIpDocument, readIpDocument, createWillDocument, readWillDocument }
