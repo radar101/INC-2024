@@ -36,5 +36,5 @@ userRouter.get("/readip",readIpDocument)
 userRouter.get("/download", readIpDocument);
 
 userRouter.post("/uploadWill", uploadWillDocs, createWillDocument);
-userRouter.get("/downloadWill", readIpDocument);
+userRouter.get("/readwill", readWillDocument);
 module.exports = userRouter
