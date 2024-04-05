@@ -155,32 +155,32 @@ const createIpDocument = async (req, res) => {
     try {
         
         // userInput validatefirst (left)
-        const {newTitle, newIpType, newDescription, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
-        // upload file on IPFS 
-
-        console.log(req.body);
-        const signDoc = JSON.parse(req.body.docs[1]).filename;
-        console.log(signDoc)
+        let {newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
+        
+        const signDoc = req.files[0].originalname;
        
+  
         
         //console.log("------all files: -----", req.files, "--------------");
         //console.log('+++++++++only first element:++++++', req.files[0], "++++++++++++++");
         const newOwnerDigitalSign = await uploadFileOnIpfs(signDoc);
+        
         console.log("------string: -----", newOwnerDigitalSign, "--------------");
         
-        const newProofs = [];
-        for(var i = 2; i<req.body.docs.length; i++){
-            console.log(req.body.docs[i].filename);
-            const newElement = await uploadFileOnIpfs(req.body.docs[i].filename);
+         const newProofs = [];
+        for(var i = 1; i<req.files.length; i++){
+           
+            
+            const newElement = await uploadFileOnIpfs(req.files[i].originalname);
             newProofs.push(newElement);
         }
+    
 
-        //     // get cid 
-            // console.log(cid);
-        //     //call function // pass the required data;
-        const newLinks = ['www.youtube.com','www.facebook.com'];
+        const newLink = ['www.youtube.com','www.facebook.com'];
+        newLink.push(newLinks);
+        newLinks=newLink;
         const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
-        //    console.log(id);
+    
         res.json({ id });
         //    if(id)
         //    {
@@ -189,6 +189,8 @@ const createIpDocument = async (req, res) => {
         //    }
 
         // TODO: Delete file from server
+
+       
 
     }
     catch (err) {

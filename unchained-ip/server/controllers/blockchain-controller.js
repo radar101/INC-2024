@@ -73,9 +73,10 @@ class Blockchain
             useOwnerProofIdentifier: 'newOwnerProofIdentifier',
             useOwnerDigitalSign: 'newOwnerDigitalSign',
         }*/
+        //console.log(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
         const newOwnerProofType = "Aadhar";
-        //console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
-        //console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
+        console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
+        console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
 
         try{
             const documentId = await this.contract.methods.addIpRecord(
@@ -141,7 +142,7 @@ class Blockchain
                 ownerProofType: ipRecord.ownerProofType,
                 ownerProofIdentifier: ipRecord.ownerProofIdentifier,
                 ownerDigitalSign: ipRecord.ownerDigitalSign,
-                timestamp: ipRecord.timestamp.toString()
+                timestamp:  ipRecord.timestamp.toString()
             };
             return resIpRecord;
         } catch (error) {

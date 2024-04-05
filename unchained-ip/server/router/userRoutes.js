@@ -28,5 +28,8 @@ userRouter.get('/getuser', Authentication, getUser);
 userRouter.post('/uploadprofilepic', Authentication, uploadMiddleware.single("profilepic"), uploadProfilePicture);
 
 userRouter.post("/upload", uploadDocs, createIpDocument);
+
+userRouter.get("/readip",readIpDocument)    
+
 userRouter.get("/download", readIpDocument);
 module.exports = userRouter
