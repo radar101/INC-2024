@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Blockchain = require('./blockchain-controller.js');
 const  uploadFileOnIpfs = require('../controllers/ipfsUploads.js');
+const { single } = require('../middlewares/uploadImageMiddleware.js');
 
 const blockchain = new Blockchain();
 
@@ -152,21 +153,25 @@ const uploadProfilePicture = async (req, res) => {
 // newOwnerProofIdentifier, newOwnerDigitalSign
 const createIpDocument = async (req, res) => {
     try {
-        //console.log(req.body);
-        //console.log(req.files.sign);
         
         // userInput validatefirst (left)
         const {newTitle, newIpType, newDescription, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
-        //     // upload file on IPFS 
-        const signDoc = req.files[0].originalname;
+        // upload file on IPFS 
+
+        console.log(req.body);
+        const signDoc = JSON.parse(req.body.docs[1]).filename;
+        console.log(signDoc)
+       
+        
         //console.log("------all files: -----", req.files, "--------------");
         //console.log('+++++++++only first element:++++++', req.files[0], "++++++++++++++");
         const newOwnerDigitalSign = await uploadFileOnIpfs(signDoc);
         console.log("------string: -----", newOwnerDigitalSign, "--------------");
         
         const newProofs = [];
-        for(var i = 1; i<req.files.length; i++){
-            const newElement = await uploadFileOnIpfs(req.files[i].originalname);
+        for(var i = 2; i<req.body.docs.length; i++){
+            console.log(req.body.docs[i].filename);
+            const newElement = await uploadFileOnIpfs(req.body.docs[i].filename);
             newProofs.push(newElement);
         }
 
@@ -187,9 +192,11 @@ const createIpDocument = async (req, res) => {
 
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message, err });
     }
 }
+
 
 const readIpDocument = async (req, res) => {
     try {
