@@ -167,7 +167,7 @@ class Blockchain
     )
     {
         try{
-            const trxnData = await this.contract.methods.addWillRecord(
+            const documentId = await this.contract.methods.addWillRecord(
                 newExecutorName,
                 newExecutorIdProof,
                 newExecutorDigitalSign,
@@ -180,10 +180,25 @@ class Blockchain
                 newDocument,
             ).send({from: this.account.address});
             const docId = await this.contract.methods.getWillId().call();
+            const serializedTransaction = {
+                transactionHash: documentId.transactionHash,
+                transactionIndex: documentId.transactionIndex.toString(),
+                blockNumber: documentId.blockNumber.toString(),
+                blockHash: documentId.blockHash,
+                from: documentId.from,
+                to: documentId.to,
+                cumulativeGasUsed: documentId.cumulativeGasUsed.toString(),
+                gasUsed: documentId.gasUsed.toString(),
+                logs: documentId.logs,
+                logsBloom: documentId.logsBloom,
+                status: documentId.status.toString(),
+                effectiveGasPrice: documentId.effectiveGasPrice.toString(),
+                type: documentId.type.toString()
+            };
             const docInfo = {
-                blockNumber: trxnData.blockNumber,
-                trxnHash: trxnData.transactionHash,
-                documentId: docId,
+                blockNumber: serializedTransaction.blockNumber,
+                trxnHash: serializedTransaction.transactionHash,
+                documentId: docId.toString(),
             };
             return docInfo;
         }catch(error){
@@ -196,7 +211,22 @@ class Blockchain
     {
         try {
             const willRecord = await this.contract.methods.readWillRecord(newWillId).call();
-            return willRecord;
+            const resWillRecord = {
+                id: willRecord.id.toString(),
+                executorName: willRecord.executorName,
+                executorIdProof: willRecord.executorIdProof,
+                executorDigitalSign: willRecord.executorDigitalSign,
+                testatorName: willRecord.testatorName,
+                testatorIdProof: willRecord.testatorIdProof,
+                testatorDigitalSign: willRecord.testatorDigitalSign,
+                witnessName: willRecord.witnessName,
+                witnessIdProof: willRecord.witnessIdProof,
+                witnessDigitalSign: willRecord.witnessDigitalSign,
+                willDocument: willRecord.document,
+                timestamp: willRecord.timestamp.toString(),
+            }
+            
+            return resWillRecord;
         } catch (error) {
             console.error('---------------------Error reading IP record:', error, '------------------------');
             return false;
