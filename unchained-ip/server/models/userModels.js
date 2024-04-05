@@ -22,7 +22,20 @@ const userSchema = mongoose.Schema(
         type:String,
         required:[true,"Please enter user password"]
     },
-    
+    userIP: [
+      {
+        blockNumber: { type: String },
+        trxnHash: { type: String },
+        documentId: { type: String },
+      },
+    ],
+    userWill: [
+      {
+        blockNumber: { type: String },
+        trxnHash: { type: String },
+        documentId: { type: String },
+      },
+    ]
    
   },
    {

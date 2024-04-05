@@ -157,6 +157,7 @@ const createIpDocument = async (req, res) => {
         // userInput validatefirst (left)
         let {newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
 
+        //console.log('@@@@@@@@@@@@@@@@@@@@@@@', newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier,'@@@@@@@@@@@')
   
         if(newExtraInfo == null && newLicenseType == null) {
             newExtraInfo = ""
@@ -189,15 +190,17 @@ const createIpDocument = async (req, res) => {
         const newLink = ['www.youtube.com','www.facebook.com'];
         newLink.push(newLinks);
         newLinks=newLink;
+
+        //console.log('@@@@@@@@@@@@@@@@@',newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign,'@@@@@@@@@@@@@');
         const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
     
-        res.json({ id });
-        //    if(id)
-        //    {
-        //         // store it in mongo database user profile 
-        //         // need to change the schem 
-        //    }
-
+        
+        if(id)
+           {
+            const userId  = req.rootuser._id;
+            const user = await User.findOneAndUpdate({_id : userId}, {$push : {userIP : id}});
+           }
+           res.json({ id });
         // TODO: Delete file from server
 
        
@@ -225,13 +228,13 @@ const readIpDocument = async (req, res) => {
 
         const record = await blockchain.readIpRecordToContract(newIpId);
         //console.log('################',record,'################');
-        res.json({ record });
-        //    if(id)
-        //    {
-        //         // store it in mongo database user profile 
-        //         // need to change the schem 
-        //    }
-
+       
+        if(id)
+           {
+            const userId  = req.rootuser._id;
+            const user = await User.findOneAndUpdate({_id : userId}, {$push : {userIP : id}});
+           }
+           res.json({ record });
     }
     catch (err) {
         res.status(500).json({ message: err.message, err });
