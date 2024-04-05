@@ -1,0 +1,7 @@
+#owner_det_div_cover{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-ternary);
+}

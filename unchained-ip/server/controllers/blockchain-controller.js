@@ -1,42 +1,99 @@
-const { default: Web3 } = require("web3");
-const IpContract = require('../abis/IpContract.json');
 
-class Blockchain {
-    constructor() {
-        this.web3 = null;
-        this.contract = null;
-        this.account = null;
-        this.loadBlockchain();
+const {default : Web3} = require("web3");
+//import Web3 from "web3";
+const { ABI_ID, CONTRACT_ADDRESS, INFURA_KEY, PRIVATE_KEY, QUICK_NODE_KEY } = require("../conf/config.js");
+//import { ABI_ID, CONTRACT_ADDRESS, INFURA_KEY, PRIVATE_KEY, QUICK_NODE_KEY } from "../conf/config.js";
+
+class Blockchain 
+{
+    
+    provider = `https://sepolia.infura.io/v3/${INFURA_KEY}`; 
+    //provider = 'https://responsive-divine-flower.ethereum-sepolia.quiknode.pro/${QUICK_NODE_KEY}';
+    web3 =  new Web3(this.provider);
+
+    contract_abi = ABI_ID;
+    contract_address = CONTRACT_ADDRESS;
+
+    contract = new this.web3.eth.Contract(this.contract_abi,this.contract_address);
+    account = this.web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
+    
+
+    constructor()
+    {
+        //this.web3.eth.accounts[0] = this.account;
+        this.web3.eth.accounts.wallet.add(this.account);
     }
 
-    async loadBlockchain() {
-        try {
-            this.web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
-            const networkId = await this.web3.eth.net.getId();
-            this.contract = new this.web3.eth.Contract(IpContract.abi, IpContract.networks[networkId].address);
-            this.account = this.web3.eth.accounts.privateKeyToAccount("0x47d5c913be7077ca7a76de2e25c1e7fe480ea9ed95dfff25902a243a8d652bf2");
-            this.web3.eth.getBalance(this.account.address)
-                .then(balance => {
-                    const etherBalance = this.web3.utils.fromWei(balance, 'ether');
-                    console.log("Total Ether Balance:", etherBalance, "ETH");
-                })
-                .catch(error => {
-                    console.error('Error fetching account balance:', error);
-                });
+    /*
+    Test contract functions:
 
-        } catch (error) {
-            console.error('Error occurred while loading blockchain:', error);
-        }
+    async setContractString(){
+        const useBool = await this.contract.methods.writeString("test String").send({from: this.account.address, gas: 3000000});
+        // const signedTxn = await this.contract.methods.writeString("test String").signTransaction({from: this.account.address, gas: 3000000});
+        // const useBool = await web3.eth.sendSignedTransaction(signedTxn.rawTransaction);
+        console.log("-------------------", useBool, "-------------------");
     }
 
-    async addIpRecordTocontract(newIpRecord) {
-        let { newTitle, newIpType, newDescription, stnewProofs, stnewLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign } = newIpRecord;
-        stnewLinks = stnewLinks.split(',');
-        stnewProofs = stnewProofs.split(',');
-        try {
-            const documentId = await this.contract.methods.addIpRecord(newTitle, newIpType, newDescription, stnewProofs, stnewLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign)
-                .send({ from: this.account.address, gas: 3000000 }); // Adjust gas limit as needed
-            //handle storage of the document id in user's profile data
+    // async setContractString(){
+    //     const encodedABI = await this.contract.methods.writeString("test String").encodeABI();
+
+    //     const signedTx = await this.web3.eth.accounts.signTransaction({
+    //         from: this.account.address,
+    //         gas: 3000000,
+    //         gasPrice: 20000,
+    //         to: CONTRACT_ADDRESS, // Assuming 'contract' has options property with address
+    //         data: encodedABI,
+    //         value:'0x00',
+    //       });
+
+    //     const useBool = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+
+    //     console.log("-------------------", useBool, "-------------------");
+    // }
+
+
+    async getContractString(){
+        const useString = await this.contract.methods.readString().call();
+        console.log("-------------------", useString, "-------------------");
+    }
+*/
+    async addIpRecordToContract(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
+    {
+        // const newIpRecord = {newTitle, newIpType, newDescription, newProofs, newLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign};
+        /*const newIpRecord = {
+            useTitle: 'newTitle',
+            useIpType: 'newIpType',
+            useDescription: 'newDescription',
+            useProofs: ['newProof 1', 'newProof 2'],
+            useLinks: ['newLink 1', 'newlink 2'],
+            useExtraInfo: 'newExtrainfo',
+            useLicenseType: 'newLicenseType',
+            useOwnerName: 'newOwnerName',
+            useOwnerProofType: 'newOwnerProofType',
+            useOwnerProofIdentifier: 'newOwnerProofIdentifier',
+            useOwnerDigitalSign: 'newOwnerDigitalSign',
+        }*/
+        console.log(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
+        const newOwnerProofType = "Aadhar";
+        console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
+        console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
+
+        try{
+            const documentId = await this.contract.methods.addIpRecord(
+            newTitle,
+            newIpType,
+            newDescription,
+            newProofs,
+            newLinks,
+            newExtraInfo,
+            newLicenseType,
+            newOwnerName,
+            newOwnerProofType,
+            newOwnerProofIdentifier,
+            newOwnerDigitalSign,
+            ).send({from: this.account.address,gas:3000000});
+            const docId = await this.contract.methods.getIpId().call();
+            //console.log('!!!!!!!!!!!!!!docId: ',docId.toString(),'!!!!!!!!!!!');
             const serializedTransaction = {
                 transactionHash: documentId.transactionHash,
                 transactionIndex: documentId.transactionIndex.toString(),
@@ -53,46 +110,130 @@ class Blockchain {
                 type: documentId.type.toString()
             };
             
-            console.log('Serialized transaction:', serializedTransaction);
-            return serializedTransaction;
-            // const gasPrice = await this.web3.eth.getGasPrice();
-            // console.log(gasPrice);
-            // // Construct the transaction object
-            // const tx = {
-            //     from: this.account.address,
-            //     to: IpContract.networks[5777].address, 
-            //     value: '0', 
-            //     gas: 2000000,
-            //     gasPrice,
-            //     data: this.contract.methods.addIpRecord(newTitle, newIpType, newDescription, stnewProofs, stnewLinks, newExtrainfo, newLicenseType, newOwnerName, newOwnerProofType, newOwnerProofIdentifier, newOwnerDigitalSign).encodeABI(),
-            // };
-
-            // // Sign the transaction with the connected account (prompts MetaMask)
-            const signedTx = await this.web3.eth.accounts.signTransaction(documentId, null); // Assuming private key is managed by MetaMask
-
-            // // Send the signed transaction
-            const receipt = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-
-            console.log('IP record added successfully! Transaction hash:', receipt.transactionHash);
-            console.log('Transaction details:', receipt);
-            return receipt.transactionHash;
-
-        } catch (error) {
-            console.log('Task exited with error: ', error);
+            const docInfo = {    
+                title : newTitle,            
+                blockNumber: serializedTransaction.blockNumber,
+                trxnHash: serializedTransaction.transactionHash,
+                documentId: docId.toString(),
+            };
+            return docInfo;
+        }catch(error){
+            console.log('------------------Task exited with error: ', error, '---------------------');
             return false;
         }
     }
-
-    async readIpRecordToContract(newIpId) {
+    
+    async readIpRecordToContract(newIpId)
+    {   
         try {
-            const ipRecord = await contract.methods.readIpRecord(newIpId)
-                .call();
-            console.log('IP Record:', ipRecord);
-            return ipRecord;
+            const ipRecord = await this.contract.methods.readIpRecord(newIpId).call();
+            //ipRecord.timestamp = ipRecord.timestamp.toString();
+            //ipRecord.id = ipRecord.id.toString();
+            //console.log('################',ipRecord,'################');
+            const resIpRecord = {
+                id: ipRecord.id.toString(),
+                title: ipRecord.title,
+                ipType: ipRecord.ipType,
+                description: ipRecord.description,
+                proofs: ipRecord.proofs,
+                links: ipRecord.links,
+                extraInfo: ipRecord.extraInfo,
+                licenseType: ipRecord.licenseType,
+                ownerName: ipRecord.ownerName,
+                ownerProofType: ipRecord.ownerProofType,
+                ownerProofIdentifier: ipRecord.ownerProofIdentifier,
+                ownerDigitalSign: ipRecord.ownerDigitalSign,
+                timestamp:  ipRecord.timestamp.toString()
+            };
+            return resIpRecord;
         } catch (error) {
-            console.error('Error reading IP record:', error);
+            console.error('---------------------Error reading IP record:', error, '------------------------');
             return false;
         }
     }
+
+    //Will record handling:
+
+    async addWillRecordToContract(
+        newExecutorName,
+        newExecutorIdProof,
+        newExecutorDigitalSign,
+        newTestatorName,
+        newTestatorIdProof,
+        newTestatorDigitalSign,
+        newWitnessName,
+        newWitnessIdProof,
+        newWitnessDigitalSign,
+        newDocument,
+    )
+    {
+        try{
+            const documentId = await this.contract.methods.addWillRecord(
+                newExecutorName,
+                newExecutorIdProof,
+                newExecutorDigitalSign,
+                newTestatorName,
+                newTestatorIdProof,
+                newTestatorDigitalSign,
+                newWitnessName,
+                newWitnessIdProof,
+                newWitnessDigitalSign,
+                newDocument,
+            ).send({from: this.account.address,gas:3000000});
+            const docId = await this.contract.methods.getWillId().call();
+            const serializedTransaction = {
+                transactionHash: documentId.transactionHash,
+                transactionIndex: documentId.transactionIndex.toString(),
+                blockNumber: documentId.blockNumber.toString(),
+                blockHash: documentId.blockHash,
+                from: documentId.from,
+                to: documentId.to,
+                cumulativeGasUsed: documentId.cumulativeGasUsed.toString(),
+                gasUsed: documentId.gasUsed.toString(),
+                logs: documentId.logs,
+                logsBloom: documentId.logsBloom,
+                status: documentId.status.toString(),
+                effectiveGasPrice: documentId.effectiveGasPrice.toString(),
+                type: documentId.type.toString()
+            };
+            const docInfo = {
+                type : "will",
+                blockNumber: serializedTransaction.blockNumber,
+                trxnHash: serializedTransaction.transactionHash,
+                documentId: docId.toString(),
+            };
+            return docInfo;
+        }catch(error){
+            console.log('------------------Task exited with error: ', error, '---------------------');
+            return false;
+        }
+    }
+    
+    async readWillRecordToContract(newWillId)
+    {
+        try {
+            const willRecord = await this.contract.methods.readWillRecord(newWillId).call();
+            const resWillRecord = {
+                id: willRecord.id.toString(),
+                executorName: willRecord.executorName,
+                executorIdProof: willRecord.executorIdProof,
+                executorDigitalSign: willRecord.executorDigitalSign,
+                testatorName: willRecord.testatorName,
+                testatorIdProof: willRecord.testatorIdProof,
+                testatorDigitalSign: willRecord.testatorDigitalSign,
+                witnessName: willRecord.witnessName,
+                witnessIdProof: willRecord.witnessIdProof,
+                witnessDigitalSign: willRecord.witnessDigitalSign,
+                willDocument: willRecord.document,
+                timestamp: willRecord.timestamp.toString(),
+            }
+            
+            return resWillRecord;
+        } catch (error) {
+            console.error('---------------------Error reading IP record:', error, '------------------------');
+            return false;
+        }
+    }
+
 }
 module.exports = Blockchain;
