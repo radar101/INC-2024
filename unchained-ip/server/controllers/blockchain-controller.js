@@ -73,7 +73,7 @@ class Blockchain
             useOwnerProofIdentifier: 'newOwnerProofIdentifier',
             useOwnerDigitalSign: 'newOwnerDigitalSign',
         }*/
-        //console.log(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
+        console.log(newTitle, newIpType,newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
         const newOwnerProofType = "Aadhar";
         console.log('~~~~~~~~~~proofs:~~~~',newProofs,'~~~~~~~~~~~~~~~');
         console.log('~~~~~~~~~links:~~~~~',newLinks,'~~~~~~~~~~~~~~~');
@@ -91,7 +91,7 @@ class Blockchain
             newOwnerProofType,
             newOwnerProofIdentifier,
             newOwnerDigitalSign,
-            ).send({from: this.account.address});
+            ).send({from: this.account.address,gas:3000000});
             const docId = await this.contract.methods.getIpId().call();
             //console.log('!!!!!!!!!!!!!!docId: ',docId.toString(),'!!!!!!!!!!!');
             const serializedTransaction = {
@@ -178,7 +178,7 @@ class Blockchain
                 newWitnessIdProof,
                 newWitnessDigitalSign,
                 newDocument,
-            ).send({from: this.account.address});
+            ).send({from: this.account.address,gas:3000000});
             const docId = await this.contract.methods.getWillId().call();
             const serializedTransaction = {
                 transactionHash: documentId.transactionHash,

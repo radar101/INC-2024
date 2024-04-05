@@ -153,7 +153,7 @@ const uploadProfilePicture = async (req, res) => {
 // newOwnerProofIdentifier, newOwnerDigitalSign
 const createIpDocument = async (req, res) => {
     try {
-        
+        console.log("called")
         // userInput validatefirst (left)
         let {newTitle, newIpType, newDescription, newExtraInfo, newLinks, newLicenseType, newOwnerName, newOwnerProofIdentifier} = req.body;
 
@@ -193,14 +193,16 @@ const createIpDocument = async (req, res) => {
 
         //console.log('@@@@@@@@@@@@@@@@@',newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign,'@@@@@@@@@@@@@');
         const id = await blockchain.addIpRecordToContract(newTitle, newIpType, newProofs, newDescription, newLinks, newExtraInfo, newLicenseType, newOwnerName, newOwnerProofIdentifier, newOwnerDigitalSign)
-    
         
+        console.log(id);
+
         if(id)
            {
             const userId  = req.rootuser._id;
             const user = await User.findOneAndUpdate({_id : userId}, {$push : {userIP : id}});
            }
-           res.json({ id });
+           res.json({message:"Item Added to blocchain",data:id});
+
         // TODO: Delete file from server
 
        
@@ -286,13 +288,22 @@ const createWillDocument = async (req,res) => {
             newWitnessDigitalSign,
             newDocument,)
         //    console.log(id);
-        res.json({ id });
+       
+        if(id)
+        {
+         const userId  = req.rootuser._id;
+         const user = await User.findOneAndUpdate({_id : userId}, {$push : {userWill : id}});
+        }
+        res.json({message:"Item Added to blocchain",data:id});
+
+      
 
         }catch(error){
             console.log(error);
             res.status(500).json({ message: error.message, error });
         }
     }
+
 
     const readWillDocument = async (req, res) => {
         try {
