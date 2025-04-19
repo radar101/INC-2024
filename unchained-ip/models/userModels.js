@@ -31,10 +31,10 @@ const userSchema = mongoose.Schema(
     ],
     userWill: [
       {
-          type: { type: String },
-          blockNumber: { type: String },
-          trxnHash: { type: String },
-          documentId: { type: String },
+        type: { type: String },
+        blockNumber: { type: String },
+        trxnHash: { type: String },
+        documentId: { type: String },
       },
     ],
   },

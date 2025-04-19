@@ -3,7 +3,7 @@ const { s3 } = require("../middlewares/multers3.js");
 
 const uploadFileOnIpfs = async (filename) => {
   try {
-    console.log(filename)
+    console.log(filename);
     const responseData = {
       file: filename,
       url: `${"http://localhost:8000"}/${filename}`,
@@ -17,7 +17,7 @@ const uploadFileOnIpfs = async (filename) => {
     responseData.url = `ipfs://${response.Metadata?.cid}`;
     return response.Metadata?.cid;
   } catch (error) {
-    console.log("+++++++++++++++++++",error, "++++++++++++++++++");
+    console.log("+++++++++++++++++++", error, "++++++++++++++++++");
     throw new Error("Unable to upload on ipfs");
   }
 };
