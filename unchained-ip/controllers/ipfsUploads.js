@@ -15,6 +15,7 @@ const uploadFileOnIpfs = async (filename) => {
     });
     const response = await s3.send(commandGetObject);
     responseData.url = `ipfs://${response.Metadata?.cid}`;
+    console.log(responseData.url);  
     return response.Metadata?.cid;
   } catch (error) {
     console.log("+++++++++++++++++++", error, "++++++++++++++++++");

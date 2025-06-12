@@ -6,8 +6,6 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-console.log(process.env.FILEBASE_REGION);
-
 const s3 = new S3Client({
   endpoint: "https://s3.filebase.com",
   region: process.env.FILEBASE_REGION || "",
@@ -30,12 +28,18 @@ const storage = multerS3({
 
 const uploadDocs = multer({
   storage: storage,
-  limits: { fileSize: 1000000 }, //
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 }).array("docs", 5);
 
 const uploadWillDocs = multer({
   storage: storage,
-  limits: { fileSize: 1000000 }, // Limit file size if needed
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 }).array("willDocs", 4);
 
-module.exports = { s3, uploadDocs, uploadWillDocs };
+
+const uploadOCR = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Allow 5MB, adjust as needed
+}).single("document"); // single file named 'document'
+
+module.exports = { s3, uploadOCR, uploadDocs, uploadWillDocs };

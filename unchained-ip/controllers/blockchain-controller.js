@@ -9,8 +9,9 @@ const {
 
 class Blockchain {
   provider = `https://sepolia.infura.io/v3/${INFURA_KEY}`;
-  web3 = new Web3(this.provider);
 
+  web3 = new Web3(this.provider);
+  // web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
   contract_abi = ABI_ID;
   contract_address = CONTRACT_ADDRESS;
 
@@ -25,39 +26,6 @@ class Blockchain {
     this.web3.eth.accounts.wallet.add(this.account);
   }
 
-  /*
-    Test contract functions:
-
-    async setContractString(){
-        const useBool = await this.contract.methods.writeString("test String").send({from: this.account.address, gas: 3000000});
-        // const signedTxn = await this.contract.methods.writeString("test String").signTransaction({from: this.account.address, gas: 3000000});
-        // const useBool = await web3.eth.sendSignedTransaction(signedTxn.rawTransaction);
-        console.log("-------------------", useBool, "-------------------");
-    }
-
-    // async setContractString(){
-    //     const encodedABI = await this.contract.methods.writeString("test String").encodeABI();
-
-    //     const signedTx = await this.web3.eth.accounts.signTransaction({
-    //         from: this.account.address,
-    //         gas: 3000000,
-    //         gasPrice: 20000,
-    //         to: CONTRACT_ADDRESS, // Assuming 'contract' has options property with address
-    //         data: encodedABI,
-    //         value:'0x00',
-    //       });
-
-    //     const useBool = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction)
-
-    //     console.log("-------------------", useBool, "-------------------");
-    // }
-
-
-    async getContractString(){
-        const useString = await this.contract.methods.readString().call();
-        console.log("-------------------", useString, "-------------------");
-    }
-*/
   async addIpRecordToContract(
     newTitle,
     newIpType,
